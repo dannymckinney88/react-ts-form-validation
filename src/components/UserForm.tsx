@@ -45,6 +45,17 @@ const UserForm = ({ onUserCreated, onClose }: UserFormProps) => {
     if (validate()) {
       onUserCreated?.({ ...formData });
       onClose();
+    } else {
+      // Move focus to the first invalid field after failed submission.
+      // This is a critical accessibility pattern — without it, keyboard
+      // and screen reader users have no indication of where errors are.
+      // WCAG 2.1 SC 3.3.1 — Error Identification
+      setTimeout(() => {
+        const firstError = document.querySelector(
+          '[aria-invalid="true"]'
+        ) as HTMLElement;
+        firstError?.focus();
+      }, 0);
     }
   };
 
@@ -116,6 +127,16 @@ const UserForm = ({ onUserCreated, onClose }: UserFormProps) => {
           <label htmlFor="add-email" className="form-label">
             Email Address
           </label>
+          {/*
+    Helper text is part of the accessible description chain.
+    It gives format guidance before validation fails,
+    and composes with the error message via aria-describedby.
+    Screen reader announces: label → helper text → error (if present)
+  */}
+          <p id="email-help" className="helper-text">
+            Use the format name@example.com
+            <span className="sr-only"> This field is required.</span>
+          </p>
           <input
             id="add-email"
             className={`form-input ${errors.email ? 'input-error' : ''}`}
@@ -125,7 +146,9 @@ const UserForm = ({ onUserCreated, onClose }: UserFormProps) => {
               setFormData({ ...formData, email: e.target.value })
             }
             aria-invalid={!!errors.email}
-            aria-describedby={errors.email ? 'email-error' : undefined}
+            // Composing helper text and error together gives screen readers
+            // full context: format guidance + validation feedback in correct order
+            aria-describedby={`email-help${errors.email ? ' email-error' : ''}`}
             required
           />
           {errors.email && (

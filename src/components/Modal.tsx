@@ -21,10 +21,13 @@ const Modal = ({ onClose, children, title }: ModalProps) => {
     const first = elements[0];
     const last = elements[elements.length - 1];
 
-    // Move focus into the modal when it opens.
-    // WCAG 2.1 SC 2.4.3 — Focus Order: focus must move to the dialog
+    // Focus the first input for better form UX.
+    // For a form modal, focusing the first input is more useful
+    // than focusing the close button — users can start typing immediately.
+    // WCAG 2.1 SC 2.4.3 — Focus Order: focus must move into the dialog
     // so keyboard and screen reader users are not left on the page behind it.
-    first?.focus();
+    const firstInput = modalRef.current?.querySelector('input');
+    (firstInput as HTMLElement)?.focus();
 
     const handleTab = (e: KeyboardEvent) => {
       if (e.key !== 'Tab') return;

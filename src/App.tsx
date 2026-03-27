@@ -32,7 +32,6 @@ function App() {
           {fetchError}
         </p>
       )}
-
       {!isLoading && !fetchError && (
         <>
           <UserList users={users} onDelete={handleDelete} />

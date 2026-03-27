@@ -1,6 +1,17 @@
-# React TypeScript User Management — Accessible Form Handling
+## Accessible Form Handling in React (Production Patterns)
 
-A production-minded React + TypeScript demo focused on **accessible form validation**, **modal focus management**, and **WCAG 2.1 compliance**. Built to demonstrate real-world accessibility patterns that go beyond surface-level aria attributes.
+Most form validation UX is still broken — especially for accessibility.
+
+Common issues:
+
+- Errors are not associated with inputs
+- Screen readers don’t announce validation changes
+- Focus gets lost in modals
+- Keyboard users get trapped or disoriented
+
+This project demonstrates how to build accessible form validation and modal workflows in React + TypeScript using real WCAG 2.1 patterns.
+
+These are not theoretical patterns — they reflect production experience fixing 900+ accessibility issues across enterprise applications.
 
 Live Demo: https://react-ts-form-validation.vercel.app/
 
@@ -10,29 +21,41 @@ Audit Tool: https://www.dannymckinney.dev/accessibility-audit
 
 ## Screenshots
 
-### Main View
+### Main View — Structured Layout
 
 ![User Management main view showing user cards in a grid layout](docs/screenshots/main-view.png)
 
-### Add User Modal
+### Modal Form — Accessible Dialog Pattern
 
 ![Add New User modal with form fields and close button](docs/screenshots/modal-form.png)
 
-### Validation Errors
+### Validation Errors — Clear, Announced Feedback
 
 ![Form showing inline validation error messages for all fields](docs/screenshots/validation-errors.png)
 
-### Focus Management
+### Focus Management — Keyboard Navigation
 
 ![Close button with visible focus ring demonstrating keyboard navigation](docs/screenshots/focus-visible.png)
 
-### Accessibility Audit — Zero Violations
+### Audit Results — Verified Accessibility
 
 ![axe DevTools showing 0 accessibility violations](docs/screenshots/axe-zero-violations.png)
 
 ---
 
-## What This Demonstrates
+## What Most Developers Get Wrong
+
+- Using visual-only error messages without screen reader support
+- Not linking errors to inputs via aria-describedby
+- Not managing focus when modals open/close
+- Relying only on color to indicate errors
+- Letting validation run without clear timing (confusing UX)
+
+This project addresses each of these directly.
+
+---
+
+## Key Accessibility Patterns
 
 ### Accessible Form Validation
 
@@ -42,6 +65,8 @@ Audit Tool: https://www.dannymckinney.dev/accessibility-audit
 - Email regex and phone format validation with clear, actionable error messages
 
 ### Modal Accessibility (WCAG 2.1 SC 2.1.2, 2.4.3)
+
+Modals are one of the most common sources of accessibility issues. This implementation ensures users never lose focus or context.
 
 - `role="dialog"` and `aria-modal="true"` for correct screen reader behavior
 - `aria-labelledby` linking the dialog to its visible heading
@@ -111,11 +136,13 @@ Tested with:
 - **NVDA screen reader** — full keyboard and announcement testing
 - **Keyboard-only navigation** — all flows completable without a mouse
 
+> **Note:** Automated tools only catch a subset of accessibility issues. Manual testing (screen reader + keyboard navigation) was performed to validate real-world usability and interaction flows.
+
 ### Tested with my own Accessibility Audit Tool
 
 ![Accessibility Audit Tool showing zero violations on this project](docs/screenshots/audit-tool-zero.png)
 
-Even Google.com has accessibility violations:
+For context, even large production sites can surface accessibility issues in automated audits:
 ![Accessibility Audit Tool showing 4 violations on google.com](docs/screenshots/audit-tool-google.png)
 
 ---
@@ -137,6 +164,10 @@ npm run build
 
 ## Background
 
-This project was built as part of an active reskilling effort into modern React and TypeScript after 5 years of enterprise fintech UI development. The accessibility patterns here reflect real production experience — including serving as the WCAG SME for a platform managing trillions in client assets and leading remediation of 900+ accessibility issues across 30+ pages.
+This project was built as part of a reskilling effort into modern React and TypeScript after 5 years in enterprise fintech UI development.
+
+The accessibility patterns reflect real production experience, including serving as a WCAG SME and leading remediation of 900+ accessibility issues across 30+ pages.
+
+The goal was not just to build a form — but to demonstrate how accessible patterns should actually be implemented in real applications.
 
 The goal was to build something that demonstrates not just that I can write React, but that I understand _why_ the patterns matter.

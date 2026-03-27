@@ -75,12 +75,7 @@ const UserForm = ({ onUserCreated, onClose }: UserFormProps) => {
           required
         />
         {errors.name && (
-          <span
-            className="error-text"
-            id="name-error"
-            role="alert"
-            aria-live="polite"
-          >
+          <span className="error-text" id="name-error" role="alert">
             {errors.name}
           </span>
         )}
@@ -101,6 +96,7 @@ const UserForm = ({ onUserCreated, onClose }: UserFormProps) => {
           }
           aria-invalid={!!errors.username}
           aria-describedby={errors.username ? 'username-error' : undefined}
+          required
         />
         {errors.username && (
           <span
@@ -127,6 +123,7 @@ const UserForm = ({ onUserCreated, onClose }: UserFormProps) => {
           onChange={(e) => setFormData({ ...formData, email: e.target.value })}
           aria-invalid={!!errors.email}
           aria-describedby={errors.email ? 'email-error' : undefined}
+          required
         />
         {errors.email && (
           <span
@@ -153,14 +150,10 @@ const UserForm = ({ onUserCreated, onClose }: UserFormProps) => {
           onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
           aria-invalid={!!errors.phone}
           aria-describedby={errors.phone ? 'phone-error' : undefined}
+          required
         />
         {errors.phone && (
-          <span
-            className="error-text"
-            id="phone-error"
-            role="alert"
-            aria-live="polite"
-          >
+          <span className="error-text" id="phone-error" role="alert">
             {errors.phone}
           </span>
         )}
@@ -170,7 +163,7 @@ const UserForm = ({ onUserCreated, onClose }: UserFormProps) => {
         <button type="button" onClick={onClose} className="btn-secondary">
           Cancel
         </button>
-        <button type="submit" className="btn-primary">
+        <button type="submit" className="btn-primary" aria-label="Add new user">
           Create User
         </button>
       </div>

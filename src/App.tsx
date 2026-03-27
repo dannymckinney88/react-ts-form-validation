@@ -2,7 +2,7 @@ import { useFetchUsers } from './hooks/useFetchUsers';
 import UserList from './components/UserList';
 import { useState, useRef } from 'react';
 import Modal from './components/Modal';
-
+import type { User } from './types/users';
 import './index.css';
 import UserForm from './components/UserForm';
 
@@ -10,14 +10,21 @@ function App() {
   const { users, setUsers, isLoading, fetchError } = useFetchUsers();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const addButtonRef = useRef<HTMLButtonElement>(null);
+  const [successMessage, setSuccessMessage] = useState('');
 
   const closeAndFocus = () => {
     setIsModalOpen(false);
-    // Using a timeout of 0 ensures the Modal is fully unmounted
-    // before we try to move focus back to the button.
     setTimeout(() => {
       addButtonRef.current?.focus();
     }, 0);
+  };
+
+  const handleUserCreated = (newUser: Omit<User, 'id'>) => {
+    const userWithId = { ...newUser, id: Date.now() };
+    setUsers((prev) => [userWithId, ...prev]);
+    setSuccessMessage(`${newUser.name} has been successfully added.`);
+    // Clear after announcement
+    setTimeout(() => setSuccessMessage(''), 3000);
   };
 
   const handleDelete = async (id: number) => {
@@ -46,20 +53,21 @@ function App() {
           {fetchError}
         </p>
       )}
+
       {!isLoading && !fetchError && (
-        <>
-          <UserList
-            users={users}
-            onDelete={handleDelete}
-            onAddUser={() => setIsModalOpen(true)}
-            addButtonRef={addButtonRef}
-          />
-        </>
+        <UserList
+          users={users}
+          onDelete={handleDelete}
+          onAddUser={() => setIsModalOpen(true)}
+          addButtonRef={addButtonRef}
+        />
       )}
-      {/* Only render if isModalOpen is true */}
+      <p role="status" aria-live="polite" className="sr-only">
+        {successMessage}
+      </p>
       {isModalOpen && (
         <Modal onClose={closeAndFocus}>
-          <UserForm onClose={closeAndFocus} />
+          <UserForm onClose={closeAndFocus} onUserCreated={handleUserCreated} />
         </Modal>
       )}
     </main>

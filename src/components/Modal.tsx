@@ -2,11 +2,11 @@ import { useEffect, useRef } from 'react';
 
 interface ModalProps {
   onClose: () => void;
-
   children: React.ReactNode;
+  title: string; // add this
 }
 
-const Modal = ({ onClose, children }: ModalProps) => {
+const Modal = ({ onClose, children, title }: ModalProps) => {
   const modalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -58,11 +58,19 @@ const Modal = ({ onClose, children }: ModalProps) => {
         role="dialog"
         aria-modal="true"
         ref={modalRef}
-        onClick={(e) => e.stopPropagation()} // prevent overlay click closing from bubbling
+        onClick={(e) => e.stopPropagation()}
       >
-        <button type="button" onClick={onClose} aria-label="Close modal">
-          ✕
-        </button>
+        <div className="modal-header">
+          <h2 id="add-user-modal-heading">{title}</h2>
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="Close modal"
+            className="btn-close"
+          >
+            ✕
+          </button>
+        </div>
         {children}
       </div>
     </div>

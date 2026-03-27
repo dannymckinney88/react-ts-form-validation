@@ -25,6 +25,7 @@ const UserCard = ({ user, onDelete }: UserCardProps) => {
           type="button"
           className="btn-outline"
           aria-disabled="true"
+          aria-label={`Edit user ${user.name}`}
           disabled
         >
           Edit

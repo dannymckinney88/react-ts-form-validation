@@ -39,37 +39,42 @@ function App() {
   };
 
   return (
-    <main className="container" aria-labelledby="users-page-heading">
+    <main aria-labelledby="users-page-heading" className="page">
       <h1 id="users-page-heading">User Management</h1>
+      <div className="container">
+        {isLoading && (
+          <p role="status" aria-live="polite">
+            Fetching users...
+          </p>
+        )}
 
-      {isLoading && (
-        <p role="status" aria-live="polite">
-          Fetching users...
+        {fetchError && (
+          <p role="alert" className="error" aria-live="polite">
+            {fetchError}
+          </p>
+        )}
+
+        {!isLoading && !fetchError && (
+          <UserList
+            users={users}
+            onDelete={handleDelete}
+            onAddUser={() => setIsModalOpen(true)}
+            addButtonRef={addButtonRef}
+          />
+        )}
+        <p role="status" aria-live="polite" className="sr-only">
+          {successMessage}
         </p>
-      )}
-
-      {fetchError && (
-        <p role="alert" className="error" aria-live="polite">
-          {fetchError}
-        </p>
-      )}
-
-      {!isLoading && !fetchError && (
-        <UserList
-          users={users}
-          onDelete={handleDelete}
-          onAddUser={() => setIsModalOpen(true)}
-          addButtonRef={addButtonRef}
-        />
-      )}
-      <p role="status" aria-live="polite" className="sr-only">
-        {successMessage}
-      </p>
-      {isModalOpen && (
-        <Modal onClose={closeAndFocus}>
-          <UserForm onClose={closeAndFocus} onUserCreated={handleUserCreated} />
-        </Modal>
-      )}
+        {isModalOpen && (
+          // App.tsx
+          <Modal onClose={closeAndFocus} title="Add New User">
+            <UserForm
+              onClose={closeAndFocus}
+              onUserCreated={handleUserCreated}
+            />
+          </Modal>
+        )}
+      </div>
     </main>
   );
 }

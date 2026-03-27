@@ -49,125 +49,132 @@ const UserForm = ({ onUserCreated, onClose }: UserFormProps) => {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      noValidate
-      className="form-stack"
-      aria-labelledby="add-user-modal-heading"
-    >
-      <h2 id="add-user-modal-heading" className="form-title">
-        Add New User
-      </h2>
+    <>
+      <form
+        onSubmit={handleSubmit}
+        noValidate
+        className="form-stack"
+        aria-labelledby="add-user-modal-heading"
+        id="add-user-form"
+      >
+        {/* Name Field */}
+        <div className="form-field">
+          <label htmlFor="add-name" className="form-label">
+            Full Name
+          </label>
+          <input
+            id="add-name"
+            className={`form-input ${errors.name ? 'input-error' : ''}`}
+            type="text"
+            value={formData.name}
+            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+            aria-invalid={!!errors.name}
+            aria-describedby={errors.name ? 'name-error' : undefined}
+            required
+          />
+          {errors.name && (
+            <span className="error-text" id="name-error" role="alert">
+              {errors.name}
+            </span>
+          )}
+        </div>
 
-      {/* Name Field */}
-      <div className="form-field">
-        <label htmlFor="add-name" className="form-label">
-          Full Name
-        </label>
-        <input
-          id="add-name"
-          className={`form-input ${errors.name ? 'input-error' : ''}`}
-          type="text"
-          value={formData.name}
-          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-          aria-invalid={!!errors.name}
-          aria-describedby={errors.name ? 'name-error' : undefined}
-          required
-        />
-        {errors.name && (
-          <span className="error-text" id="name-error" role="alert">
-            {errors.name}
-          </span>
-        )}
-      </div>
+        {/* Username Field */}
+        <div className="form-field">
+          <label htmlFor="add-username" className="form-label">
+            Username
+          </label>
+          <input
+            id="add-username"
+            className={`form-input ${errors.username ? 'input-error' : ''}`}
+            type="text"
+            value={formData.username}
+            onChange={(e) =>
+              setFormData({ ...formData, username: e.target.value })
+            }
+            aria-invalid={!!errors.username}
+            aria-describedby={errors.username ? 'username-error' : undefined}
+            required
+          />
+          {errors.username && (
+            <span
+              className="error-text"
+              id="username-error"
+              role="alert"
+              aria-live="polite"
+            >
+              {errors.username}
+            </span>
+          )}
+        </div>
 
-      {/* Username Field */}
-      <div className="form-field">
-        <label htmlFor="add-username" className="form-label">
-          Username
-        </label>
-        <input
-          id="add-username"
-          className={`form-input ${errors.username ? 'input-error' : ''}`}
-          type="text"
-          value={formData.username}
-          onChange={(e) =>
-            setFormData({ ...formData, username: e.target.value })
-          }
-          aria-invalid={!!errors.username}
-          aria-describedby={errors.username ? 'username-error' : undefined}
-          required
-        />
-        {errors.username && (
-          <span
-            className="error-text"
-            id="username-error"
-            role="alert"
-            aria-live="polite"
-          >
-            {errors.username}
-          </span>
-        )}
-      </div>
+        {/* Email Field */}
+        <div className="form-field">
+          <label htmlFor="add-email" className="form-label">
+            Email Address
+          </label>
+          <input
+            id="add-email"
+            className={`form-input ${errors.email ? 'input-error' : ''}`}
+            type="email"
+            value={formData.email}
+            onChange={(e) =>
+              setFormData({ ...formData, email: e.target.value })
+            }
+            aria-invalid={!!errors.email}
+            aria-describedby={errors.email ? 'email-error' : undefined}
+            required
+          />
+          {errors.email && (
+            <span
+              className="error-text"
+              id="email-error"
+              role="alert"
+              aria-live="polite"
+            >
+              {errors.email}
+            </span>
+          )}
+        </div>
 
-      {/* Email Field */}
-      <div className="form-field">
-        <label htmlFor="add-email" className="form-label">
-          Email Address
-        </label>
-        <input
-          id="add-email"
-          className={`form-input ${errors.email ? 'input-error' : ''}`}
-          type="email"
-          value={formData.email}
-          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-          aria-invalid={!!errors.email}
-          aria-describedby={errors.email ? 'email-error' : undefined}
-          required
-        />
-        {errors.email && (
-          <span
-            className="error-text"
-            id="email-error"
-            role="alert"
-            aria-live="polite"
-          >
-            {errors.email}
-          </span>
-        )}
-      </div>
-
-      {/* Phone Field - NEW */}
-      <div className="form-field">
-        <label htmlFor="add-phone" className="form-label">
-          Phone Number
-        </label>
-        <input
-          id="add-phone"
-          className={`form-input ${errors.phone ? 'input-error' : ''}`}
-          type="tel" // type="tel" for mobile keyboard optimization
-          value={formData.phone}
-          onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-          aria-invalid={!!errors.phone}
-          aria-describedby={errors.phone ? 'phone-error' : undefined}
-          required
-        />
-        {errors.phone && (
-          <span className="error-text" id="phone-error" role="alert">
-            {errors.phone}
-          </span>
-        )}
-      </div>
-
-      <div className="form-actions">
+        {/* Phone Field - NEW */}
+        <div className="form-field">
+          <label htmlFor="add-phone" className="form-label">
+            Phone Number
+          </label>
+          <input
+            id="add-phone"
+            className={`form-input ${errors.phone ? 'input-error' : ''}`}
+            type="tel" // type="tel" for mobile keyboard optimization
+            value={formData.phone}
+            onChange={(e) =>
+              setFormData({ ...formData, phone: e.target.value })
+            }
+            aria-invalid={!!errors.phone}
+            aria-describedby={errors.phone ? 'phone-error' : undefined}
+            required
+          />
+          {errors.phone && (
+            <span className="error-text" id="phone-error" role="alert">
+              {errors.phone}
+            </span>
+          )}
+        </div>
+      </form>
+      <div className="form-footer">
         <button type="button" onClick={onClose} className="btn-secondary">
           Cancel
         </button>
-        <button type="submit" className="btn-primary" aria-label="Add new user">
+        <button
+          type="submit"
+          className="btn-primary"
+          aria-label="Add new user"
+          form="add-user-form"
+        >
           Create User
         </button>
       </div>
-    </form>
+    </>
   );
 };
 

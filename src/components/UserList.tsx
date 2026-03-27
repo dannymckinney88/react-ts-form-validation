@@ -25,7 +25,12 @@ const UserList = ({
     <>
       <div className="list-header">
         <h2>Users</h2>
-        <button type="button" onClick={onAddUser} ref={addButtonRef}>
+        <button
+          type="button"
+          className="btn-primary"
+          onClick={onAddUser}
+          ref={addButtonRef}
+        >
           Add User
         </button>
       </div>

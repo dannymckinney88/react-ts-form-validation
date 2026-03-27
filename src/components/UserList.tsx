@@ -1,11 +1,19 @@
 import type { User } from '../types/users';
 import UserCard from './UserCard';
+
 interface UserListProps {
   users: User[];
   onDelete: (id: number) => void;
+  onAddUser: () => void;
+  addButtonRef: React.RefObject<HTMLButtonElement | null>;
 }
 
-const UserList = ({ users, onDelete }: UserListProps) => {
+const UserList = ({
+  users,
+  onDelete,
+  onAddUser,
+  addButtonRef,
+}: UserListProps) => {
   if (users.length === 0) {
     return (
       <p aria-live="polite" role="status">
@@ -14,15 +22,23 @@ const UserList = ({ users, onDelete }: UserListProps) => {
     );
   }
   return (
-    <ul className="users-list">
-      {users.map((user) => {
-        return (
-          <li key={user.id}>
-            <UserCard user={user} onDelete={onDelete} />
-          </li>
-        );
-      })}
-    </ul>
+    <>
+      <div className="list-header">
+        <h2>Users</h2>
+        <button type="button" onClick={onAddUser} ref={addButtonRef}>
+          Add User
+        </button>
+      </div>
+      <ul className="users-list">
+        {users.map((user) => {
+          return (
+            <li key={user.id}>
+              <UserCard user={user} onDelete={onDelete} />
+            </li>
+          );
+        })}
+      </ul>
+    </>
   );
 };
 

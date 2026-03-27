@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { User } from '../types/users';
+import type { User, FormErrors } from '../types/users';
 
 interface UserFormProps {
   onUserCreated?: (user: Omit<User, 'id'>) => void;
@@ -14,14 +14,15 @@ const UserForm = ({ onUserCreated, onClose }: UserFormProps) => {
     phone: '',
   });
 
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [errors, setErrors] = useState<FormErrors>({});
 
   const validate = () => {
     const newErrors: Record<string, string> = {};
     if (!formData.name.trim()) newErrors.name = 'Full Name is required';
     if (!formData.username.trim()) newErrors.username = 'Username is required';
 
-    // Basic email validation regex: ensures @ and at least one dot
+    // Basic email regex: ensures format of local@domain.tld
+    // For production, consider a library like validator.js
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       newErrors.email = 'Please enter a valid email';
     }
@@ -29,27 +30,31 @@ const UserForm = ({ onUserCreated, onClose }: UserFormProps) => {
     if (!formData.phone.trim()) {
       newErrors.phone = 'Phone number is required';
     }
-    // Phone regex: allows 7-15 digits, spaces, dashes, and parentheticals
+    // Phone regex: accepts common formats including international.
+    // For production, consider libphonenumber for full locale support.
     else if (!/^\+?[\d\s\-().]{7,15}$/.test(formData.phone)) {
       newErrors.phone = 'Please enter a valid phone number';
     }
 
     setErrors(newErrors);
-    // Returns true only if the errors object is empty
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (validate()) {
-      // Lift the "Draft" state to the Parent (App.tsx)
       onUserCreated?.({ ...formData });
-      onClose(); // Triggers focus-return in the parent
+      onClose();
     }
   };
 
   return (
     <>
+      {/*
+        noValidate disables native browser validation so we can
+        control the validation UX and error announcements ourselves.
+        aria-labelledby links the form to the modal heading.
+      */}
       <form
         onSubmit={handleSubmit}
         noValidate
@@ -57,7 +62,6 @@ const UserForm = ({ onUserCreated, onClose }: UserFormProps) => {
         aria-labelledby="add-user-modal-heading"
         id="add-user-form"
       >
-        {/* Name Field */}
         <div className="form-field">
           <label htmlFor="add-name" className="form-label">
             Full Name
@@ -68,18 +72,23 @@ const UserForm = ({ onUserCreated, onClose }: UserFormProps) => {
             type="text"
             value={formData.name}
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+            // aria-invalid signals to screen readers that the field
+            // has a validation error — works alongside the error message
             aria-invalid={!!errors.name}
+            // aria-describedby links the input to its error message element.
+            // Screen readers will announce the error text after the field label.
             aria-describedby={errors.name ? 'name-error' : undefined}
             required
           />
           {errors.name && (
+            // role="alert" causes screen readers to announce this
+            // immediately when it appears in the DOM
             <span className="error-text" id="name-error" role="alert">
               {errors.name}
             </span>
           )}
         </div>
 
-        {/* Username Field */}
         <div className="form-field">
           <label htmlFor="add-username" className="form-label">
             Username
@@ -97,18 +106,12 @@ const UserForm = ({ onUserCreated, onClose }: UserFormProps) => {
             required
           />
           {errors.username && (
-            <span
-              className="error-text"
-              id="username-error"
-              role="alert"
-              aria-live="polite"
-            >
+            <span className="error-text" id="username-error" role="alert">
               {errors.username}
             </span>
           )}
         </div>
 
-        {/* Email Field */}
         <div className="form-field">
           <label htmlFor="add-email" className="form-label">
             Email Address
@@ -126,18 +129,12 @@ const UserForm = ({ onUserCreated, onClose }: UserFormProps) => {
             required
           />
           {errors.email && (
-            <span
-              className="error-text"
-              id="email-error"
-              role="alert"
-              aria-live="polite"
-            >
+            <span className="error-text" id="email-error" role="alert">
               {errors.email}
             </span>
           )}
         </div>
 
-        {/* Phone Field - NEW */}
         <div className="form-field">
           <label htmlFor="add-phone" className="form-label">
             Phone Number
@@ -145,7 +142,8 @@ const UserForm = ({ onUserCreated, onClose }: UserFormProps) => {
           <input
             id="add-phone"
             className={`form-input ${errors.phone ? 'input-error' : ''}`}
-            type="tel" // type="tel" for mobile keyboard optimization
+            // type="tel" triggers the numeric keyboard on mobile devices
+            type="tel"
             value={formData.phone}
             onChange={(e) =>
               setFormData({ ...formData, phone: e.target.value })
@@ -161,10 +159,16 @@ const UserForm = ({ onUserCreated, onClose }: UserFormProps) => {
           )}
         </div>
       </form>
+
       <div className="form-footer">
         <button type="button" onClick={onClose} className="btn-secondary">
           Cancel
         </button>
+        {/*
+          form="add-user-form" connects this button to the form by ID.
+          This is required because the button lives outside the <form> element
+          in the modal footer, but still needs to trigger form submission.
+        */}
         <button
           type="submit"
           className="btn-primary"

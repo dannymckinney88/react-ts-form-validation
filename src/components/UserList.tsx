@@ -16,6 +16,10 @@ const UserList = ({
 }: UserListProps) => {
   if (users.length === 0) {
     return (
+      // role="status" + aria-live="polite" announces the empty state
+      // to screen readers without interrupting current speech.
+      // Used instead of role="alert" because this is non-critical info.
+
       <p aria-live="polite" role="status">
         No users found.
       </p>

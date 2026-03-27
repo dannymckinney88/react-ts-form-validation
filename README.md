@@ -4,6 +4,8 @@ A production-minded React + TypeScript demo focused on **accessible form validat
 
 Live Demo: https://react-ts-form-validation.vercel.app/
 
+Audit Tool: https://www.dannymckinney.dev/accessibility-audit
+
 ---
 
 ## Screenshots
@@ -138,8 +140,3 @@ npm run build
 This project was built as part of an active reskilling effort into modern React and TypeScript after 5 years of enterprise fintech UI development. The accessibility patterns here reflect real production experience — including serving as the WCAG SME for a platform managing trillions in client assets and leading remediation of 900+ accessibility issues across 30+ pages.
 
 The goal was to build something that demonstrates not just that I can write React, but that I understand _why_ the patterns matter.
-
-```
-
----
-```
